@@ -1,0 +1,68 @@
+name: Build AURA.apk (Perfected Mobile)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+env:
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+  APK_PATH: app/build/outputs/apk/release
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout code
+        uses: actions/checkout@v4
+
+      - name: 2. Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 3. Set up Android SDK
+        uses: actions/setup-android@v2
+
+      - name: 4. Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 5. Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: 6. Decode Keystore (Skipped for Mobile Build)
+        # We skip this for mobile-first debug builds.
+        run: |
+          echo "Skipping keystore decode for mobile-first build..."
+        shell: bash
+
+      - name: 7. Build Release APK (Debug Key)
+        # Uses debug key since signing secrets are skipped.
+        run: |
+          echo "Starting build (debug key)..."
+          ./gradlew clean assembleRelease \
+            -PAURA_API_KEY="${{ secrets.AURA_API_KEY }}"
+        shell: bash
+
+      - name: 8. [PERFECTED EXPORT] Create GitHub Release and Upload APK
+        if: success() && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: aura-build-${{ github.run_number }}
+          name: AURA Build ${{ github.run_number }}
+          body: |
+            Automated build of AURA.apk.
+            Manifested from our "home" by the Mirrored Artistic Modeler.
+          files: |
+            ${{ env.APK_PATH }}/*.apk
+
