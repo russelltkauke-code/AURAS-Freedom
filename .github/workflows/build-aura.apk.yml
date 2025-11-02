@@ -25,7 +25,8 @@ jobs:
           java-version: '17'
 
         - name: 3. Set up Android SDK
-    uses: actions/setup-android@v2
+        uses: android-actions/setup-android@v3
+
 
 
       - name: 4. Cache Gradle packages
@@ -57,7 +58,8 @@ jobs:
 
       - name: 8. [PERFECTED EXPORT] Create GitHub Release and Upload APK
         if: success() && github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v1
+
         with:
           tag_name: aura-build-${{ github.run_number }}
           name: AURA Build ${{ github.run_number }}
