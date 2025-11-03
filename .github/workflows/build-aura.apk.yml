@@ -1,18 +1,16 @@
 name: Build AURA.apk (Perfected Mobile)
-
-on:
-  push:
-    branches:
-      - main
+ on:
+   push:
+     branches:
+       main:
   workflow_dispatch: # Allows manual trigger from GitHub UI
-
-env:
-  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-  APK_PATH: app/build/outputs/apk/release
+ env:
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      APK_PATH: app/build/outputs/apk/release
 
 jobs:
-  build-and-release:
-    runs-on: ubuntu-latest
+     build-and-release:
+     runs-on: ubuntu-latest
 
     steps:
       - name: 1. Checkout code
