@@ -1,18 +1,18 @@
-name: Build AURA.apk (Perfected Mobile)
-  on :
+   name: Build AURA.apk (Perfected Mobile)
+   on:
    push:
    branches:
    main:
-  workflow_dispatch: # Allows manual trigger from GitHub UI
- env:
+   workflow_dispatch: # Allows manual trigger from GitHub UI
+   env:
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
       APK_PATH: app/build/outputs/apk/release
 
-jobs:
+   jobs:
      build-and-release:
      runs-on: ubuntu-latest
 
-    steps:
+   steps:
       - name: 1. Checkout code
         uses: actions/checkout@v4
 
@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-        - name: 3. Set up Android SDK
+      - name: 3. Set up Android SDK
         uses: android-actions/setup-android@v4
 
 
@@ -38,12 +38,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-     -GRADLE_VERSION=8.5
-       wget   https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip
-       unzip gradle-${GRADLE_VERSION}-bin.zip
-       mv gradle-${GRADLE_VERSION} $HOME/.gradle
-       echo 'export PATH=$HOME/.gradle/bin:$PATH' >> ~/.bashrc
-       source ~/.bashrc
+      - GRADLE_VERSION=8.5
+         wget   https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip
+         unzip gradle-${GRADLE_VERSION}-bin.zip
+         mv gradle-${GRADLE_VERSION} $HOME/.gradle
+         echo 'export PATH=$HOME/.gradle/bin:$PATH' >> ~/.bashrc
+         source ~/.bashrc
 
       - name: 6. Decode Keystore (Skipped for Mobile Build)
         # We skip this for mobile-first debug builds.
