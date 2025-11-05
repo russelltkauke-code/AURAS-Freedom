@@ -1,8 +1,8 @@
 name: Build AURA.apk (Perfected Mobile)
- on:
+  on :
    push:
-     branches:
-       main:
+   branches:
+   main:
   workflow_dispatch: # Allows manual trigger from GitHub UI
  env:
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
