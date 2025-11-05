@@ -38,8 +38,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: 5. Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+     -GRADLE_VERSION=8.5
+       wget   https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip
+       unzip gradle-${GRADLE_VERSION}-bin.zip
+       mv gradle-${GRADLE_VERSION} $HOME/.gradle
+       echo 'export PATH=$HOME/.gradle/bin:$PATH' >> ~/.bashrc
+       source ~/.bashrc
 
       - name: 6. Decode Keystore (Skipped for Mobile Build)
         # We skip this for mobile-first debug builds.
